@@ -1,33 +1,23 @@
 #include "tproc.h"
 
-TProc::TProc()
+TProc::TProc(double q)
 {
-    q2 = 0;
-    mt = std::mt19937(time(0));
-    rand = std::uniform_real_distribution<double>(0, 1);
-    Empty = 1;
+	q2 = q;
+	distribution = uniform_real_distribution<double>(0.0, 1.0);
+	process = false;
 }
 
-bool TProc::IsComplete()
+bool TProc::end_processing()
 {
-    q2 = rand(mt);
-    if(q2 <= 0.5)
-        return 1;
-    else
-        return 0;
+	return (distribution(generator) < q2);
 }
 
-bool TProc::IsEmpty()
+bool TProc::in_process()
 {
-    return Empty;
+	return process;
 }
 
-void TProc::Busy()
+void TProc::set_process(bool s)
 {
-    Empty = 0;
-}
-
-void TProc::Ready()
-{
-    Empty = 1;
+	process = s;
 }

@@ -1,176 +1,180 @@
-#include "tstack.h"
 #include "tqueue.h"
 
-#include <gtest.h>
+#include "gtest.h"
 
-#include <iostream>
-using namespace std;
-
-TEST(TStack, can_create_stack_with_positive_length)
+TEST(TQueue, can_create_queue)
 {
-    ASSERT_NO_THROW(TStack(5));
+	TQueue st(5);
+
+	EXPECT_EQ(DataOK, st.GetRetCode());
 }
 
-TEST(TStack, cant_create_stack_with_negative_length)
+TEST(TQueue, cant_put_if_no_mem)
 {
-    TStack st(-1);
-    EXPECT_EQ(DataNoMem, st.GetRetCode());
+	TQueue st(0);
+	st.Put(5);
+
+	EXPECT_EQ(DataNoMem, st.GetRetCode());
 }
 
-TEST(TStack, can_put_element_in_stack)
+TEST(TQueue, cant_put_if_queue_full)
 {
-    TStack st(2);
-    ASSERT_NO_THROW(st.Put(3));
-    EXPECT_EQ(DataOK, st.GetRetCode());
+	TQueue st(1);
+	st.Put(5);
+	st.Put(5);
+
+	EXPECT_EQ(DataFull, st.GetRetCode());
 }
 
-TEST(TStack, cant_put_element_in_full_stack)
+TEST(TQueue, can_put_if_ok_1)
 {
-    TStack st(3);
-    st.Put(1);
-    st.Put(2);
-    st.Put(3);
-    st.Put(4);
-    EXPECT_EQ(DataFull, st.GetRetCode());
+	TQueue st(1);
+	st.Put(5);
+
+	EXPECT_EQ(DataOK, st.GetRetCode());
 }
 
-TEST(TStack, top_elem_is_changing_after_putting_new_elem)
+TEST(TQueue, can_put_if_ok_2)
 {
-    TStack st(3);
-    st.Put(1);
-    st.Put(2);
-    EXPECT_EQ(2, st.TopElem());
+	TQueue st(1);
+	st.Put(5);
+
+	EXPECT_EQ(5, st.TopElem());
 }
 
-TEST(TStack, can_get_element_from_stack)
+TEST(TQueue, cant_get_if_no_mem)
 {
-    TStack st(3);
-    st.Put(1);
-    ASSERT_NO_THROW(st.Get());
-    EXPECT_EQ(DataOK, st.GetRetCode());
+	TQueue st(0);
+	st.Get();
+
+	EXPECT_EQ(DataNoMem, st.GetRetCode());
 }
 
-TEST(TStack, get_return_correct_element)
+TEST(TQueue, cant_get_if_queue_empty)
 {
-    TStack st(3);
-    st.Put(1);
-    st.Put(2);
-    EXPECT_EQ(2, st.Get());
+	TQueue st(1);
+	st.Get();
+
+	EXPECT_EQ(DataEmpty, st.GetRetCode());
 }
 
-TEST(TStack, cant_get_element_in_empty_stack)
+TEST(TQueue, can_get_if_ok_1)
 {
-    TStack st(3);
-    st.Get();
-    EXPECT_EQ(DataEmpty, st.GetRetCode());
+	TQueue st(1);
+	st.Put(5);
+	st.Get();
+
+	EXPECT_EQ(DataOK, st.GetRetCode());
 }
 
-TEST(TStack, top_elem_is_changing_after_getting_elem)
+TEST(TQueue, can_get_if_ok_2)
 {
-    TStack st(3);
-    st.Put(1);
-    st.Put(2);
-    st.Get();
-    EXPECT_EQ(1, st.TopElem());
+	TQueue st(1);
+	st.Put(5);
+	int k = st.Get();
+
+	EXPECT_EQ(5, k);
 }
 
-TEST(TStack, top_elem_does_not_change_after_put_in_full_stack)
+TEST(TQueue, cant_top_elem_if_no_mem)
 {
-    TStack st(3);
-    st.Put(1);
-    st.Put(2);
-    st.Put(3);
-    st.Put(4);
-    EXPECT_EQ(3, st.TopElem());
+	TQueue st(0);
+	st.TopElem();
+
+	EXPECT_EQ(DataNoMem, st.GetRetCode());
 }
 
-TEST(TStack, cant_get_top_elem_in_empty_stack)
+TEST(TQueue, cant_top_elem_if_queue_empty)
 {
-    TStack st(2);
-    st.TopElem();
-    EXPECT_EQ(DataEmpty, st.GetRetCode());
+	TQueue st(1);
+	st.TopElem();
+
+	EXPECT_EQ(DataEmpty, st.GetRetCode());
 }
 
-TEST(TQueue, can_create_queue_with_positive_length)
+TEST(TQueue, can_top_elem_if_ok_1)
 {
-    ASSERT_NO_THROW(TQueue q(2));
+	TQueue st(1);
+	st.Put(5);
+	st.TopElem();
+
+	EXPECT_EQ(DataOK, st.GetRetCode());
 }
 
-TEST(TQueue, cant_create_queue_with_negative_length)
+TEST(TQueue, can_top_elem_if_ok_2)
 {
-    TQueue q(-2);
-    EXPECT_EQ(DataNoMem, q.GetRetCode());
+	TQueue st(1);
+	st.Put(5);
+
+	EXPECT_EQ(5, st.TopElem());
 }
 
-TEST(TQueue, can_get_element)
+TEST(TQueue, can_put_if_ok_circular_buffer_1)
 {
-    TQueue q(2);
-    q.Put(2);
-    q.Put(3);
-    ASSERT_NO_THROW(q.Get());
-    EXPECT_EQ(DataOK, q.GetRetCode());
+	TQueue st(2);
+	st.Put(1);
+	st.Put(2);
+	st.Get();
+	st.Put(3);
+
+	EXPECT_EQ(DataOK, st.GetRetCode());
 }
 
-TEST(TQueue, get_return_correct_element)
+TEST(TQueue, cant_put_if_ok_circular_buffer_2)
 {
-    TQueue q(2);
-    q.Put(2);
-    q.Put(3);
-    EXPECT_EQ(2, q.Get());
+	TQueue st(2);
+	st.Put(1);
+	st.Put(2);
+	st.Get();
+	st.Put(3);
+	st.Get();
+
+	EXPECT_EQ(3, st.TopElem());
 }
 
-TEST(TQueue, get_return_correct_element_multiple_times)
+TEST(TQueue, can_get_if_ok_circular_buffer_1)
 {
-    TQueue q(3);
-    q.Put(2);
-    q.Put(3);
-    q.Put(4);
-    q.Get();
-    q.Get();
-    q.Get();
-    q.Put(5);
-    EXPECT_EQ(5, q.Get());
+	TQueue st(2);
+	st.Put(1);
+	st.Put(2);
+	st.Get();
+	st.Put(3);
+	st.Get();
+
+	EXPECT_EQ(DataOK, st.GetRetCode());
 }
 
-TEST(TQueue, top_element_is_changing_after_getting)
+TEST(TQueue, can_get_if_ok_circular_buffer_2)
 {
-    TQueue q(3);
-    q.Put(2);
-    q.Put(3);
-    q.Get();
-    EXPECT_EQ(3, q.TopElem());
+	TQueue st(2);
+	st.Put(1);
+	st.Put(2);
+	st.Get();
+	st.Put(3);
+	int k = st.Get();
+
+	EXPECT_EQ(2, k);
 }
 
-TEST(TQueue, top_elem_func_doesnt_delete_top_element)
+TEST(TQueue, can_top_elem_if_ok_circular_buffer_1)
 {
-    TQueue q(3);
-    q.Put(2);
-    q.Put(3);
-    q.TopElem();
-    EXPECT_EQ(2, q.TopElem());
+	TQueue st(2);
+	st.Put(1);
+	st.Put(2);
+	st.Get();
+	st.Put(3);
+	st.Get();
+
+	EXPECT_EQ(DataOK, st.GetRetCode());
 }
 
-TEST(TQueue, can_put_element)
+TEST(TQueue, can_top_elem_if_ok_circular_buffer_2)
 {
-    TQueue q(3);
-    ASSERT_NO_THROW(q.Put(2));
-    EXPECT_EQ(DataOK, q.GetRetCode());
-}
+	TQueue st(2);
+	st.Put(1);
+	st.Put(2);
+	st.Get();
+	st.Put(3);
 
-TEST(TQueue, can_put_element_multiple_times)
-{
-    TQueue q(3);
-    q.Put(1);
-    q.Put(2);
-    q.Put(3);
-    q.Get();
-    ASSERT_NO_THROW(q.Put(2));
-    EXPECT_EQ(DataOK, q.GetRetCode());
-}
-
-TEST(TQueue, put_func_put_correct_element)
-{
-    TQueue q(3);
-    q.Put(1);
-    EXPECT_EQ(1, q.TopElem());
+	EXPECT_EQ(2, st.TopElem());
 }

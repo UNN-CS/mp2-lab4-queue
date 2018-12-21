@@ -1,21 +1,17 @@
-#ifndef __PROC_H__
-#define __PROC_H__
-
 #include <random>
-#include <ctime>
 
-class TProc {
-    double q2;
-    std::mt19937 mt;
-    std::uniform_real_distribution<double> rand;
-    bool Empty;
+using namespace std;
+
+class TProc
+{
+private:
+	double q2;
+	default_random_engine generator;
+	uniform_real_distribution<double> distribution;
+	bool process;
 public:
-    TProc();
-    bool IsComplete();
-    bool IsEmpty();
-    bool IsReady();
-    void Ready();
-    void Busy();
+	TProc(double q);
+	bool end_processing();
+	bool in_process();
+	void set_process(bool s);
 };
-
-#endif // __PROC_H__

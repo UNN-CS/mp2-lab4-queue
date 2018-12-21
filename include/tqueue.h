@@ -1,21 +1,12 @@
-#ifndef __QUEUE_H__
-#define __QUEUE_H__
-
 #include "tstack.h"
 
-class TQueue: public TStack
+class TQueue : public TStack
 {
-private:
-    int Li;
+protected:
+	int Li;
+	virtual int GetNextIndex(int index);
 public:
-    TQueue(int Size = DefMemSize);
-    ~TQueue() {};
-    TData Get();
-    TData TopElem();
-    void Print();
-    int GetSize() const;
-private:
-    int GetNextIndex(int ind);
+	TQueue(int Size = DefMemSize);
+	virtual TData Get();
+	virtual TData TopElem();
 };
-
-#endif // __QUEUE_H__

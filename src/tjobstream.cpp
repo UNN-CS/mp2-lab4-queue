@@ -1,25 +1,16 @@
 #include "tjobstream.h"
-#include <iostream>
 
-TJobStream::TJobStream()
+TJobStream::TJobStream(double q)
 {
-    q1 = 0;
-    mt = std::mt19937(time(0));
-    rand = std::uniform_real_distribution<double>(0, 1);
+	q1 = q;
+	distribution = uniform_real_distribution<double>(0.0, 1.0);
+	task_id = 0;
 }
 
-bool TJobStream::IsTask()
+int TJobStream::generate()
 {
-
-    q1 = rand(mt);
-    if(q1 <= 0.5)
-        return 1;
-    else
-        return 0;
-}
-
-
-int TJobStream::GetTask()
-{
-    return cnt++;
+	if (distribution(generator) < q1)
+		return ++task_id;
+	else
+		return -1;
 }

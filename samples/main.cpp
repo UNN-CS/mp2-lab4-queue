@@ -3,61 +3,64 @@
 #include "tproc.h"
 #include "tqueue.h"
 
-using namespace std;
+void imitation_compute(int N, double q_job, double q_pr, int size)
+{
+	int clocks = N;
+	TJobStream JobStream(q_job);
+	TProc Proc(q_pr);
+	TQueue Queue(size);
+
+	int clocks_in_waiting = 0;
+	int generated_tasks = 0;
+	int completed_tasks = 0;
+	int skipped_tasks = 0;
+
+	int current_task = 0;
+
+	for (int i = 0; i < clocks; i++)
+	{
+		current_task = JobStream.generate();
+		if (current_task != -1)
+		{
+			++generated_tasks;
+			if (Queue.IsFull())
+				++skipped_tasks;
+			else
+				Queue.Put(current_task);
+		}
+
+		if (Proc.in_process())
+		{
+			if (Proc.end_processing())
+			{
+				++completed_tasks;
+				Proc.set_process(false);
+			}
+		}
+
+		if (!Proc.in_process())
+		{
+			if (!Queue.IsEmpty())
+			{
+				Queue.Get();
+				Proc.set_process(true);
+			}
+			else
+				++clocks_in_waiting;
+		}
+	}
+
+	cout << "Generated tasks " << generated_tasks << endl;
+	cout << "Average clocks on task " << (double(clocks - clocks_in_waiting) / double(completed_tasks)) << endl;
+	cout << "Skipped tasks " << (double(skipped_tasks)/double(generated_tasks))*100 << "%" << endl;
+	cout << "Clocks in waiting " << (double(clocks_in_waiting)/double(clocks)) << "%" << endl;
+}
+
+
 
 int main()
 {
-    TJobStream task;
-    TProc proc;
-    int NumTasks = 0, NumComplete = 0, NumRejections = 0, MediumTime = 0, NumEmpty = 0, UnprocessedTasks = 0;
-    int Tact = 1000000;
-    int QSize = 10;
-    TQueue q(QSize);
-    for(int i = 0; i < Tact; i++)
-    {
-        if(task.IsTask())
-        {
-            ++NumTasks;
-            int tmp1 = task.GetTask();
-            if(q.IsFull())
-                ++NumRejections;
-            else
-                q.Put(tmp1);
-        }
-        if(proc.IsEmpty())
-        {
-            if(q.IsEmpty())
-                ++NumEmpty;
-            else
-            {
-                q.Get();
-                proc.Busy();
-            }
-        }
-        else
-        {
-            if(proc.IsComplete())
-            {
-                ++NumComplete;
-                proc.Ready();
-                if(q.IsEmpty())
-                    ++NumEmpty;
-                else
-                {
-                    q.Get();
-                    proc.Busy();
-                }
-            }
-        }
-    }
+	imitation_compute(100, 0.5, 0.5, 5);
 
-    UnprocessedTasks = q.GetSize();
-    if(!proc.IsEmpty())
-        ++UnprocessedTasks;
-    cout<<"Number of tasks: "<<NumTasks<<"\n";
-    cout<<"Number of rejections: "<<double(NumRejections)*100/double(NumTasks)<<"%\n";
-    cout<<"Medium time on one task: "<<double(Tact-NumEmpty)/double(NumComplete)<<"\n";
-    cout<<"Number of idle tacts: "<<double(NumEmpty)*100/double(Tact)<<"%\n";
-
-    return 0;
+	return 0;
 }
