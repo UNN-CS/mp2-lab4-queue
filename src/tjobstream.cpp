@@ -1,25 +1,27 @@
-#include <cstdlib>
-#include "TJobStream.h"
+#include "tjobstream.h"
 
-double DoubleRand(double max, double min)
+TJobStream::TJobStream(int size,double barrier):num_tasks(size),bar_val(barrier),
+ran(std::move(std::uniform_real_distribution<double>(0.0,1.0))),
+gen(std::move(std::mt19937(time(0))))
 {
-	return min + double(rand()) / RAND_MAX * (max - min);
+    cur_task=0;
 }
 
-TJobStream::TJobStream(double Intens)
+int TJobStream::size()const
 {
-	if (Intens < 0 || Intens > 1) throw - 1;
-	q1 = Intens;
+    return num_tasks;
 }
 
-int number = 0;
-int TJobStream::GetNewJob()
+bool TJobStream::is_empty()const
 {
-	if (DoubleRand(1, 0) < q1) return ++number;
-	else return 0;
+    return cur_task>=num_tasks;
 }
 
-double TJobStream::GetQ1()
+int TJobStream::next()
 {
-	return q1;
+    if (is_empty())
+        return -1;
+    if (ran(gen)<bar_val)
+        return -1;
+    return cur_task++;
 }

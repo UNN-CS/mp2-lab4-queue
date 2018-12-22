@@ -1,12 +1,22 @@
-#include "TJobStream.h"
+#ifndef __TPROC__
+#define __TPROC__
+
+#include <random>
+#include <time.h>
 
 class TProc
 {
 private:
-	double q2;
-	int JobId;
+    std::mt19937 gen;
+    std::uniform_real_distribution<double> ran;
+    double bar_val;
+    bool task;
 public:
-	TProc(double Rate);
-	int IsProcBusy(void);
-	double GetQ2();
+    TProc(double barrier=0.5);
+    ~TProc(){}
+    bool task_ready();
+    bool has_task()const;
+    void push();
 };
+
+#endif // __TJOBSTREAM__

@@ -1,11 +1,23 @@
+#ifndef __TJOBSTREAM__
+#define __TJOBSTREAM__
+
+#include <random>
+#include <time.h>
+
 class TJobStream
 {
 private:
-	double q1;
+    std::mt19937 gen;
+    std::uniform_real_distribution<double> ran;
+    double bar_val;
+    int cur_task;
+    int num_tasks;
 public:
-	TJobStream(double Intens);
-	int GetNewJob(void);
-	double GetQ1();
+    TJobStream(int size,double barrier=0.5);
+    ~TJobStream(){}
+    int size()const;
+    bool is_empty()const;
+    int next();
 };
- 
-double DoubleRand(double max, double min);
+
+#endif // __TJOBSTREAM__

@@ -1,84 +1,107 @@
-#include "tqueue.h"
 #include "gtest.h"
+#include "tqueue.h"
+#include "tjobstream.h"
+#include "tproc.h"
 
-TEST(TQueue, can_create_queue_with_positive_size)
+TEST(TQueue, can_create_queue)
 {
-	TQueue q(5);
-
-	EXPECT_EQ(DataOK, q.GetRetCode());
+    ASSERT_NO_THROW(TQueue q);
 }
 
-TEST(TQueue, cant_create_queue_with_negative_size)
+TEST(TQueue, can_put_elem_to_queue)
 {
-	TQueue q(-5);
-
-	EXPECT_EQ(DataErr, q.GetRetCode());
+    TQueue q;
+    ASSERT_NO_THROW(q.Put(8));
 }
 
-TEST(TQueue, created_queue_is_empty)
+TEST(TQueue, can_get_elem_from_queue)
 {
-	TQueue q(5);
-
-	EXPECT_EQ(true, q.IsEmpty());
+    TQueue q;
+    q.Put(8);
+    ASSERT_NO_THROW(q.Get());
 }
 
-TEST(TQueue, can_set_and_get_element)
+TEST(TQueue, top_elem_is_correct)
 {
-	TQueue q(3);
-	q.Put(9);
-	
-	EXPECT_EQ(9, q.Get());
+    TQueue q;
+    q.Put(8);
+    EXPECT_EQ(8,q.Get());
 }
 
-TEST(TQueue, replenished_queue_is_not_empty)
+TEST(TQueue, full_empty_full)
 {
-	TQueue q(5);
-	q.Put(7);
-	
-	EXPECT_EQ(false, q.IsEmpty());
+    TQueue q(1);
+    q.Put(3);
+    q.Get();
+    ASSERT_NO_THROW(q.Put(7));
 }
 
-TEST(TQueue, queue_after_get_is_not_full)
+TEST(TQueue, top_elem_works_correct)
 {
-	TQueue q(3);
-	q.Put(2); q.Put(3); q.Put(4);
-	q.Get();
-	
-	EXPECT_EQ(false, q.IsFull());
+    TQueue q(1);
+    q.Put(9);
+    EXPECT_EQ(9,q.TopElem());
+    EXPECT_TRUE(q.IsFull());
 }
 
-TEST(TQueue, queue_return_first_element)
+TEST(TQueue, full_empty_full_empty)
 {
-	TQueue q(3);
-	q.Put(2); q.Put(3); q.Put(4);
-	
-	EXPECT_EQ(2, q.Get());
+    TQueue q(1);
+    q.Put(3);
+    q.Get();
+    q.Put(2);
+    EXPECT_EQ(2,q.Get());
 }
 
-TEST(TQueue, cant_set_element_when_queue_is_full)
+TEST(TJobStream, can_create_tjobstream)
 {
-	TQueue q(3);
-	q.Put(2); q.Put(3); q.Put(4);
-	q.Put(5);
-	
-	EXPECT_EQ(DataFull, q.GetRetCode());
+    ASSERT_NO_THROW(TJobStream a(4));
 }
 
-TEST(TQueue, cant_get_element_when_queue_is_empty)
+TEST(TJobStream, can_get_next_value)
 {
-	TQueue q(3);
-	q.Get();
-	EXPECT_EQ(DataEmpty, q.GetRetCode());
+    bool fl=false;
+    TJobStream a(4,0.1);
+    for (int i=0;i<100;++i)
+        if (a.next()!=-1)
+            fl=true;
+    EXPECT_TRUE(fl);
 }
 
-TEST(TQueue, queue_is_ring_buffer)
+TEST(TJobStream, can_get_minus_one)
 {
-	TQueue q(3);
-	q.Put(1); q.Put(2); q.Put(3);
-	q.Get();
-	q.Put(4);
-
-	EXPECT_EQ(2, q.Get());
-	EXPECT_EQ(3, q.Get());
-	EXPECT_EQ(4, q.Get());
+    bool fl=false;
+    TJobStream a(4,0.9);
+    for (int i=0;i<100;++i)
+        if (a.next()==-1)
+            fl=true;
+    EXPECT_TRUE(fl);
 }
+
+TEST(TProc, can_create_tproc)
+{
+    ASSERT_NO_THROW(TProc a);
+}
+
+TEST(TProc, can_perform_task)
+{
+    TProc a(0.9);
+    bool fl=false;
+    a.push();
+    for (int i=0;i<100;++i)
+        if (a.task_ready())
+            fl=true;
+    EXPECT_TRUE(fl);
+}
+
+TEST(TProc, cannot_perform_task)
+{
+    TProc a(0.1);
+    bool fl=false;
+    a.push();
+    for (int i=0;i<100;++i)
+        if (!a.task_ready())
+            fl=true;
+    EXPECT_TRUE(fl);
+}
+

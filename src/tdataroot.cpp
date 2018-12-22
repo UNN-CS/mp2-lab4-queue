@@ -1,4 +1,5 @@
 // ННГУ, ВМК, Курс "Методы программирования-2", С++, ООП
+//
 // tdataroot.cpp - Copyright (c) Гергель В.П. 28.07.2000 (06.08)
 //   Переработано для Microsoft Visual Studio 2008 Сысоевым А.В. (21.04.2015)
 //
@@ -8,27 +9,21 @@
 #include <stdio.h>
 #include "tdataroot.h"
 
-TDataRoot::TDataRoot(int Size)
+TDataRoot::TDataRoot(int Size): TDataCom()
 {
-	if (Size < 0)
-	{
-		SetRetCode(DataErr);
-		return;
-	}
-	MemSize = Size;
-	DataCount = 0;
-	if (MemSize == 0)
-	{
-		MemType = MEM_RENTER;
-		pMem = NULL;
-	}
-	else
-	{
-		MemType = MEM_HOLDER;
-		pMem = new TData[MemSize];
-	}
-	SetRetCode(DataOK);
-}
+  DataCount = 0;
+  MemSize = Size;
+  if (Size == 0) // память будет установлена методом SetMem
+  {
+    pMem = NULL;
+    MemType = MEM_RENTER;
+  }
+  else // память выделяется объектом
+  {
+    pMem = new TElem[MemSize];
+    MemType = MEM_HOLDER;
+  }
+} /*-------------------------------------------------------------------------*/
 
 TDataRoot::~TDataRoot()
 {

@@ -1,18 +1,30 @@
-#include "TProc.h"
+#include "tproc.h"
 
-TProc::TProc(double Rate)
+TProc::TProc(double barrier):bar_val(barrier),
+ran(std::move(std::uniform_real_distribution<double>(0.0,1.0))),
+gen(std::move(std::mt19937(time(0)+1)))
 {
-	if (Rate < 0 || Rate > 1) throw - 1;
-	q2 = Rate;
+    task=false;
 }
 
-int TProc::IsProcBusy()
+bool TProc::task_ready()
 {
-	if (DoubleRand(1, 0) < q2) return 0;
-	else return 1;
+    if (has_task())
+    {
+        bool fl=ran(gen)>bar_val;
+        if (fl)
+            task=false;
+        return fl;
+    }
+    return 0;
 }
 
-double TProc::GetQ2()
+bool TProc::has_task()const
 {
-	return q2;
+    return task;
+}
+
+void TProc::push()
+{
+    task=true;
 }

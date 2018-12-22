@@ -1,69 +1,46 @@
+#include <iostream>
+#include "tproc.h"
+#include "tjobstream.h"
 #include "tqueue.h"
-#include "TProc.h"
-#include <ctime>
+#include <limits.h>
 using namespace std;
-
-void test(int qsize,double q1,double q2,int tacts)
-{
-	int num, count = 0, ref = 0, ok = 0, downtime = 0;
-	TQueue q(qsize);
-	TJobStream js(q1);
-	TProc pr(q2);
-	int p1 = (1 / js.GetQ1()), p2 = (1 / pr.GetQ2());
-
-	for (int i = 0, t1 = 0, t2 = 0; i < tacts; i++, t1++, t2++)
-	{
-		if (t1%p1 == 0)
-		{
-			num = js.GetNewJob();
-			if (num != 0)
-			{
-				count++;
-				q.Put(num);
-				if (q.GetRetCode() == DataFull) ref++;
-			}
-		}
-
-		if (t2%p2 == 0)
-		{
-			if (!pr.IsProcBusy())
-			{
-				q.Get();
-				if (q.GetRetCode() == DataEmpty) downtime++;
-				else ok++;
-			}
-		}
-
-	}
-
-	setlocale(LC_ALL, "Russian");
-	cout << "Ќачальные данные:" << endl;
-	cout << "»нтенсивность потока заданий = " << q1 << endl;
-	cout << "ѕроизводительность процессора вычислительной системы = " << q2 << endl;
-	cout << "–азмер очереди ожидани€ = " << qsize << endl;
-	cout << "ќбщее число тактов работы процессора = " << tacts << endl << endl;
-	cout << "¬ыходные данные:" << endl;
-	cout << " оличество поступивших в вычислительную систему заданий в течение всего процесса имитации = " << count << endl;
-	cout << "ќбщее количество выполненных заданий = " << ok<<endl;
-	cout << " оличество отказов в обслуживании заданий из-за переполнени€ очереди = " << (double)ref / count * 100 << "%" << endl;
-	cout << " оличество тактов просто€ процессора из-за отсутстви€ в очереди заданий дл€ обслуживани€ = " << ((double)downtime / tacts) * 100 << "%" <<endl<<endl<<endl;
-}
 
 int main()
 {
-	srand(time(0));
-
-	int size = 10; //размер очереди ожидани€
-	int t = 1000; //общее число тактов работы процессора
-	double q = 0.5; //интенсивность потока заданий
-	double Q = 0.5; //производительность процессора вычислительной системы
-	test(size, q, Q, t);
-
-	q = 0.5; Q = 0.2;
-	test(size, q, Q, t);
-
-	q = 0.2; Q = 0.5;
-	test(size, q, Q, t);
-
-	return 0;
+    int tacts,stream_len=INT_MAX,qsize,idle_tacts=0,queue_overflow=0,complete=0,put_t=0,num_t=0;
+    double proc_bar,stream_bar;
+    cin >> tacts >> qsize >> proc_bar >> stream_bar;
+    TQueue q(qsize);
+    TJobStream job(stream_len,stream_bar);
+    TProc proc(proc_bar);
+    for (int i=0;i<tacts;++i)
+    {
+        int g=job.next();
+        if (g!=-1)
+        {
+            if (q.IsFull())
+                ++queue_overflow;
+            else
+            {
+                q.Put(g);
+                ++put_t;
+            }
+            ++num_t;
+        }
+        if (proc.has_task())
+            if (proc.task_ready())
+                ++complete;
+        if (!proc.has_task())
+            if (q.IsEmpty())
+                ++idle_tacts;
+            else
+            {
+                q.Get();
+                proc.push();
+            }
+    }
+    cout << "tasks get: " << num_t << '\n';
+    cout << "percent of rejection in queue: " << 100.0*queue_overflow/num_t << "%\n";
+    cout << "average value of tacts for task: " << (double)(tacts-idle_tacts)/complete << '\n';
+    cout << "percent of idle tacts: " << 100.0*idle_tacts/tacts << "%\n";
 }
