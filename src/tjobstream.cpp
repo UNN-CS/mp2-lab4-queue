@@ -6,7 +6,6 @@ double DoubleRand(double max, double min)
 	return min + double(rand()) / RAND_MAX * (max - min);
 }
 
-
 TJobStream::TJobStream(double Intens)
 {
 	if (Intens < 0 || Intens > 1) throw - 1;

@@ -3,7 +3,6 @@
 #include <ctime>
 using namespace std;
 
-
 void test(int qsize,double q1,double q2,int tacts)
 {
 	int num, count = 0, ref = 0, ok = 0, downtime = 0;

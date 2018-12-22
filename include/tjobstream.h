@@ -7,5 +7,5 @@ public:
 	int GetNewJob(void);
 	double GetQ1();
 };
-
+ 
 double DoubleRand(double max, double min);

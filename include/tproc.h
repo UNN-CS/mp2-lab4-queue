@@ -10,4 +10,3 @@ public:
 	int IsProcBusy(void);
 	double GetQ2();
 };
-

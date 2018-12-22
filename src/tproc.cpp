@@ -12,11 +12,6 @@ int TProc::IsProcBusy()
 	else return 1;
 }
 
-/*int TProc::RunNewJob(int JobId)
-{
-
-}*/
-
 double TProc::GetQ2()
 {
 	return q2;
