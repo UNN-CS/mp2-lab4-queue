@@ -1,16 +1,12 @@
-
-#pragma once
-
 #include "tstack.h"
 
 class TQueue : public TStack
 {
-protected:
+private:
 	int Li;
-	virtual int GetNextIndex(int index);
 public:
-	TQueue(int Size = DefMemSize) : TStack(Size), Li(0) {}
-	virtual void Put(const TData &);
-	virtual TData Get();
-	virtual TData GetTopElem();
+	TQueue(int Size = DefMemSize);
+	TData Get();
+
+	void Print();
 };

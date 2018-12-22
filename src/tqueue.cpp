@@ -1,48 +1,35 @@
 #include "tqueue.h"
-#include <iostream>
 
-using namespace std;
-
-int TQueue::GetNextIndex(int index)
+TQueue::TQueue(int Size) : TStack(Size)
 {
-	return ++index % MemSize;
-}
-
-void TQueue::Put(const TData &Val)
-{
-	if (pMem == nullptr)
-		throw SetRetCode(DataNoMem);
-	else if (IsFull())
-		throw SetRetCode(DataFull);
-	else
-	{
-		Hi = GetNextIndex(Hi);
-		pMem[Hi] = Val;
-		DataCount++;
-	}
+	Li = 0;
 }
 
 TData TQueue::Get()
 {
-	if (pMem == nullptr)
-		throw SetRetCode(DataNoMem);
-	else if (IsEmpty())
-		throw SetRetCode(DataEmpty);
-	else
+	if (GetRetCode() != DataOK)
 	{
-		DataCount--;
-		TData tmp = pMem[Li];
-		GetNextIndex(Li);
-		return tmp;
+		SetRetCode(DataErr);
+		return NULL;
 	}
+	if (this->IsEmpty())
+	{
+		TDataCom::SetRetCode(DataEmpty);
+		return -1;
+	}
+	TData tmp = pMem[Li];
+	Li = GetNextIndex(Li);
+	DataCount--;
+	return tmp;
 }
 
-TData TQueue::GetTopElem()
+void TQueue::Print()
 {
-	if (pMem == nullptr)
-		throw SetRetCode(DataNoMem);
-	else if (IsEmpty())
-		throw SetRetCode(DataEmpty);
-	else
-		return pMem[Li];
+	int i = Li;
+	while (i != Hi)
+	{
+		std::cout << pMem[i] << ' ';
+		i = GetNextIndex(i);
+	}
+	std::cout << pMem[Hi] << std::endl;
 }

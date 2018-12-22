@@ -1,78 +1,83 @@
 #include "tstack.h"
-#include <iostream>
 
-using namespace std;
+TStack::TStack(int Size) : TDataRoot(Size)
+{
+	this->Hi = this->DataCount - 1;
+}
+
+int TStack::GetHi()
+{
+	return Hi;
+}
+
+TStack::~TStack()
+{}
 
 int TStack::GetNextIndex(int index)
 {
-	return ++index;
+	return ++index % MemSize;
 }
 
-TStack::TStack(const TStack &st)
+void TStack::Put(const TData& Val)
 {
-	DataCount = st.DataCount;
-	MemSize = st.MemSize;
-	MemType = st.MemType;
-	pMem = new TElem[MemSize];
-	for (int i = 0; i < DataCount; i++)
-		pMem[i] = st.pMem[i];
-}
-
-void TStack::Put(const TData &Val)
-{
-	if (pMem == nullptr)
-		throw SetRetCode(DataNoMem);
-	else
+	if (GetRetCode() != DataOK)
 	{
-		if (IsFull())
-		{
-			void* p = new TElem[MemSize + DefMemSize];
-			SetMem(p, MemSize + DefMemSize);
-		}
-		Hi = GetNextIndex(Hi);
-		pMem[Hi] = Val;
-		DataCount++;
+		SetRetCode(DataErr);
+		return;
 	}
+	if (this->IsFull())
+	{
+		TDataCom::SetRetCode(DataFull);
+		return;
+	}
+		
+	Hi = GetNextIndex(Hi);
+	this->pMem[Hi] = Val;
+	this->DataCount++;
+	TDataCom::SetRetCode(DataOK);
 }
 
 TData TStack::Get()
 {
-	if (pMem == nullptr)
-		throw SetRetCode(DataNoMem);
-	else if (IsEmpty())
-		throw SetRetCode(DataEmpty);
-	else
+	if (GetRetCode() != DataOK)
 	{
-		DataCount--;
-		return pMem[Hi--];
+		SetRetCode(DataErr);
+		return NULL;
 	}
+	if (this->IsEmpty())
+	{
+		TDataCom::SetRetCode(DataEmpty);
+		return -1;
+	}
+	this->DataCount--;
+	TDataCom::SetRetCode(DataOK);
+	return this->pMem[Hi--];
 }
 
-int  TStack::IsValid()
+TData& TStack::operator[](int i)
 {
-	int res = 0;
-	if (pMem == nullptr)
-		res++;
-	if (MemSize < DataCount)
-		res += 2;
-	return res;
+	if (i < 0 || i >= this->DataCount)
+		TDataCom::SetRetCode(DataErr);
+	TDataCom::SetRetCode(DataOK);
+	return this->pMem[i];
+}
+
+int TStack::IsValid()
+{
+	if (GetRetCode() != DataOK)
+	{
+		SetRetCode(DataErr);
+		return -1;
+	}
+	if (this->DataCount > this->MemSize) return -1;
+	if ((this->DataCount < this->MemSize) && (this->IsFull())) return -1;
+	if ((this->DataCount == 0) && (!this->IsEmpty())) return -1;
+	if (this->DataCount < 0) return -1;
+	return 0;
 }
 
 void TStack::Print()
 {
-	if (DataCount == 0)
-		cout << "Stack is empty!";
-	for (int i = 0; i < DataCount; ++i)
-		cout << pMem[i] << " ";
-	cout << endl;
-}
-
-TData TStack::GetTopElem()
-{
-	if (pMem == nullptr)
-		throw SetRetCode(DataNoMem);
-	else if (IsEmpty())
-		throw SetRetCode(DataEmpty);
-	else
-		return pMem[Hi];
+	for (int i = this->DataCount - 1; i >= 0; i--)
+		std::cout << this->pMem[i] << " ";
 }

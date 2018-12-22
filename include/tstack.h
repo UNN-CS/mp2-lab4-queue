@@ -1,17 +1,26 @@
-#pragma once
+#ifndef __TSTACK_H__
+#define __TSTACK_H__
+
 #include "tdataroot.h"
 
-class TStack :public TDataRoot
+class TStack : public TDataRoot
 {
 protected:
-		int Hi; // индекс последнего элемента структуры
-		virtual int GetNextIndex(int Index);
+	int Hi;
+
 public:
-		TStack(int Size = DefMemSize) : TDataRoot(Size), Hi(-1) { }
-		TStack(const TStack &);
-		void Put(const TData &); // положить в стек
-		TData Get(); //взять из стека
-		int  IsValid();
-		void Print();
-		TData GetTopElem();
+	TStack(int Size);
+	int GetHi();
+	~TStack();
+	void Put(const TData & Val);
+	TData Get();
+	TData& operator[](int i);
+	int GetNextIndex(int index);
+
+	int IsValid();
+	void Print();
 };
+
+#endif
+
+
