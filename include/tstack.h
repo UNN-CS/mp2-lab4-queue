@@ -1,17 +1,17 @@
+#pragma once
 #include "tdataroot.h"
 
-class TStack : public TDataRoot
+class TStack :public TDataRoot
 {
 protected:
-	int Hi;
-	virtual int GetNextIndex(int index);
+		int Hi; // индекс последнего элемента структуры
+		virtual int GetNextIndex(int Index);
 public:
-	TStack(int Size = DefMemSize);
-	~TStack() {};
-	virtual void Put(const TData &Val);
-	virtual TData Get();
-	virtual TData TopElem();
-
-	int IsValid();
-	void Print();
+		TStack(int Size = DefMemSize) : TDataRoot(Size), Hi(-1) { }
+		TStack(const TStack &);
+		void Put(const TData &); // положить в стек
+		TData Get(); //взять из стека
+		int  IsValid();
+		void Print();
+		TData GetTopElem();
 };

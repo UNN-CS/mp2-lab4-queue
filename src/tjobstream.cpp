@@ -1,16 +1,18 @@
-#include "tjobstream.h"
+#include "TJobStream.h"
+#include <iostream>
 
-TJobStream::TJobStream(double q)
-{
-	q1 = q;
-	distribution = uniform_real_distribution<double>(0.0, 1.0);
-	task_id = 0;
-}
+using namespace std;
 
-int TJobStream::generate()
+void TJobStream::TactStream()
 {
-	if (distribution(generator) < q1)
-		return ++task_id;
-	else
-		return -1;
+
+	double chance = (rand() % 100 / 100.0f);
+	if (chance <= m_q1)
+	{
+		m_ID++;
+		if (!IsFull())
+			Put(m_ID);
+		else
+			m_CountFail++;
+	}
 }

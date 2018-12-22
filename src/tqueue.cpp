@@ -1,46 +1,48 @@
 #include "tqueue.h"
+#include <iostream>
+
+using namespace std;
 
 int TQueue::GetNextIndex(int index)
 {
 	return ++index % MemSize;
 }
 
-TQueue::TQueue(int Size) : TStack(Size)
+void TQueue::Put(const TData &Val)
 {
-	Li = 0;
+	if (pMem == nullptr)
+		throw SetRetCode(DataNoMem);
+	else if (IsFull())
+		throw SetRetCode(DataFull);
+	else
+	{
+		Hi = GetNextIndex(Hi);
+		pMem[Hi] = Val;
+		DataCount++;
+	}
 }
 
 TData TQueue::Get()
 {
 	if (pMem == nullptr)
-	{
-		SetRetCode(DataNoMem);
-	}
+		throw SetRetCode(DataNoMem);
 	else if (IsEmpty())
-	{
-		SetRetCode(DataEmpty);
-	}
+		throw SetRetCode(DataEmpty);
 	else
 	{
-		int tmp = Li;
-		Li = GetNextIndex(Li);
 		DataCount--;
-		return pMem[tmp];
+		TData tmp = pMem[Li];
+		GetNextIndex(Li);
+		return tmp;
 	}
 }
 
-TData TQueue::TopElem()
+TData TQueue::GetTopElem()
 {
 	if (pMem == nullptr)
-	{
-		SetRetCode(DataNoMem);
-	}
+		throw SetRetCode(DataNoMem);
 	else if (IsEmpty())
-	{
-		SetRetCode(DataEmpty);
-	}
+		throw SetRetCode(DataEmpty);
 	else
-	{
 		return pMem[Li];
-	}
 }

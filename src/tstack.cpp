@@ -1,5 +1,5 @@
-#include <iostream>
 #include "tstack.h"
+#include <iostream>
 
 using namespace std;
 
@@ -8,23 +8,27 @@ int TStack::GetNextIndex(int index)
 	return ++index;
 }
 
-TStack::TStack(int Size) : TDataRoot(Size)
+TStack::TStack(const TStack &st)
 {
-	Hi = -1;
+	DataCount = st.DataCount;
+	MemSize = st.MemSize;
+	MemType = st.MemType;
+	pMem = new TElem[MemSize];
+	for (int i = 0; i < DataCount; i++)
+		pMem[i] = st.pMem[i];
 }
 
 void TStack::Put(const TData &Val)
 {
 	if (pMem == nullptr)
-	{
-		SetRetCode(DataNoMem);
-	}
-	else if (IsFull())
-	{
-		SetRetCode(DataFull);
-	}
+		throw SetRetCode(DataNoMem);
 	else
 	{
+		if (IsFull())
+		{
+			void* p = new TElem[MemSize + DefMemSize];
+			SetMem(p, MemSize + DefMemSize);
+		}
 		Hi = GetNextIndex(Hi);
 		pMem[Hi] = Val;
 		DataCount++;
@@ -34,13 +38,9 @@ void TStack::Put(const TData &Val)
 TData TStack::Get()
 {
 	if (pMem == nullptr)
-	{
-		SetRetCode(DataNoMem);
-	}
+		throw SetRetCode(DataNoMem);
 	else if (IsEmpty())
-	{
-		SetRetCode(DataEmpty);
-	}
+		throw SetRetCode(DataEmpty);
 	else
 	{
 		DataCount--;
@@ -48,42 +48,31 @@ TData TStack::Get()
 	}
 }
 
-TData TStack::TopElem()
+int  TStack::IsValid()
 {
+	int res = 0;
 	if (pMem == nullptr)
-	{
-		SetRetCode(DataNoMem);
-	}
-	else if (IsEmpty())
-	{
-		SetRetCode(DataEmpty);
-	}
-	else
-	{
-		return pMem[Hi];
-	}
-}
-
-int TStack::IsValid()
-{
-	return GetRetCode();
+		res++;
+	if (MemSize < DataCount)
+		res += 2;
+	return res;
 }
 
 void TStack::Print()
 {
+	if (DataCount == 0)
+		cout << "Stack is empty!";
+	for (int i = 0; i < DataCount; ++i)
+		cout << pMem[i] << " ";
+	cout << endl;
+}
+
+TData TStack::GetTopElem()
+{
 	if (pMem == nullptr)
-	{
-		SetRetCode(DataNoMem);
-	}
+		throw SetRetCode(DataNoMem);
 	else if (IsEmpty())
-	{
-		SetRetCode(DataEmpty);
-	}
+		throw SetRetCode(DataEmpty);
 	else
-	{
-		for (int i = 0; i < DataCount; i++)
-		{
-			cout << pMem[i] << ' ';
-		}
-	}
+		return pMem[Hi];
 }
