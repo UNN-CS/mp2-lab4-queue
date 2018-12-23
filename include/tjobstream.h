@@ -1,6 +1,9 @@
 #include "tqueue.h"
 #include <stdlib.h>
-#include <time.h>
+#include <random>
+
+
+using namespace std;
 
 class TJobStream : protected TQueue
 {
