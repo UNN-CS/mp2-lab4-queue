@@ -1,6 +1,4 @@
-//
-// Created by rootreddragon on 12/23/2018.
-//
+
 
 #ifndef LAB_4_TPROC_H
 #define LAB_4_TPROC_H
@@ -9,23 +7,30 @@
 
 using namespace std;
 
-class TProc
-        {
-        private:
-    mt19937 generate;
-    double upper_bound;
-    bool TProc_busy;
-public:
-   TProc(double q2);
-    bool Tact();
-    bool IsComplete();
-    bool Ready();
-   bool IsEmpty();
-    bool Busy();
-    SetBusy(bool arg);
-    void SetBusy(bool arg);
-};
+enum ProcStatus { BUSY, FREE };
 
+class TProc
+{
+
+protected:
+    double m_q2; //вероятность завершения выполнения задания (0 <= q2 <= 1)
+    TJobStream m_JobStream;
+    int m_CountDowntime;  //количество тактов простоя
+    int m_MaxTact;
+    ProcStatus m_Status;
+public:
+    TProc(double q1, double q2, int size, int maxTact = DefMaxTacts) : m_JobStream(q1, size)
+    {
+            if (q1 < 0 || q1 > 1 || q2 < 0 || q2 > 1 || size < 0 || maxTact < 0)
+                    throw "DataError";
+            m_MaxTact = maxTact;
+            m_q2 = q2;
+            m_CountDowntime = 0;
+            m_Status = FREE;
+    }
+    void ProcWork();
+    void PrintInfo();
+};
 
 
 #endif //LAB_4_TPROC_H
