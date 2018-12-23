@@ -117,9 +117,5 @@ TEST(TQueue, overfulled_queue_isnt_valid)
 	EXPECT_EQ(false, q.IsValid());
 }
 
-TEST(TQueue, can)
-{
-	system("pause");
-}
 
 

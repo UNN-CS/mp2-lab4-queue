@@ -1,7 +1,7 @@
 #include <iostream>
 #include "tqueue.h"
 
-TQueue::TQueue(int Size  = DefMemSize):TStack(Size)
+TQueue::TQueue(int Size):TStack(Size)
 {
 	li = -1;
 }
