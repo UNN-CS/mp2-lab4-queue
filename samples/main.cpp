@@ -8,9 +8,7 @@ void simulate(int que_size, int tacts, double q1, double q2);
 
 int main()
 {
-	simulate(20, 10, 0.5, 0.5);
-
-	system("pause");
+	simulate(1, 100, 0.5, 0.5);
 
 	return 0;
 }
@@ -27,7 +25,11 @@ void simulate(int que_size, int tacts, double q1, double q2)
 	TProc proc(q2);
 	TQueue q(que_size);
 
-	if (!q.IsValid()) throw - 1;
+	if (!q.IsValid())
+	{
+		cout << "Queue is not valid\n";
+		return;
+	}
 
 	for (int i = 0; i < tacts; i++)
 	{
