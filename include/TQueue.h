@@ -15,7 +15,7 @@
         int Li;
         virtual int GetNextIndex(int index);
     public:
-        TQueue(int Size = DefMemSize) : TStack(Size), Li(0) {}
+       TQueue (int Size = DefMemSize) : TStack(Size) {}
         virtual void Put(const TData &);
         virtual TData Get();
         virtual TData GetTopElem();

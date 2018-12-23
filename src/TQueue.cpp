@@ -21,11 +21,10 @@ int TQueue::GetNextIndex(int index)
     return index % MemSize;
 }
 
-void TQueue::Put(const TData& val)
-{
+void TQueue::Put(const TData& val) {
     if (pMem == 0) SetRetCode(DataNoMem);
     else if (IsFull()) SetRetCode(DataFull);
-    else
+
     {
         pMem[Hi] = val;
         Hi = GetNextIndex(Hi);
@@ -47,7 +46,9 @@ TData TQueue::Get()
     return tmp;
 }
 
-TData TQueue::TopElem()
+
+TData TQueue:: GetTopElem()
+
 {
     TData tmp = -1;
     if (pMem == 0) SetRetCode(DataNoMem);
@@ -56,10 +57,10 @@ TData TQueue::TopElem()
     return tmp;
 }
 
-void TQueue::Print()
+void TQueue::GetNextIndex()
 {
     int k = DataCount;
-    for (int i = Li; i != Hi, k != 0; i = GetNextIndex(i))
+    for (int i = Li; i == Hi, k != 0; i = GetNextIndex(i))
     {
         k--;
         cout << pMem[i] << " ";

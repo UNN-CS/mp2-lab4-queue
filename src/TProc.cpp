@@ -5,7 +5,7 @@
 #include "TProc.h"
 
 
-TProc::TProc()
+TProc::TProc(double q2);
 {
     q2 = 0;
  generate  = mt19937(time(0));
@@ -27,7 +27,7 @@ bool TProc::IsEmpty()
     return Empty;
 }
 
-void TProc::GetBusy()
+void TProc::Busy()
 {
     Empty = 0;
 }

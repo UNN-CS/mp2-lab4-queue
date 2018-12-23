@@ -8,17 +8,22 @@
 #include <ctime>
 
 using namespace std;
+
 class TProc
         {
-private:
-    mt19937 generate;                    // генерация значения датчика
-    double upper_bound;                       // некое пороговое значение
-    bool proc_busy;                           // занятость процессора
+        private:
+    mt19937 generate;
+    double upper_bound;
+    bool TProc_busy;
 public:
-    TProc(double q2);                         // конструктор с неким пороговым значением
-    bool Tact();                              // такт
-    bool GetBusy();                           // получить занятость процессора
-    void SetBusy(bool arg);                   // установить занятость процессора
+   TProc(double q2);
+    bool Tact();
+    bool IsComplete();
+    bool Ready();
+   bool IsEmpty();
+    bool Busy();
+    SetBusy(bool arg);
+    void SetBusy(bool arg);
 };
 
 
