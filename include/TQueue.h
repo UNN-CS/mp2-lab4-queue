@@ -6,7 +6,7 @@
 #define INC_3LAB_TQUEUE_H
 
 
-#include "TStack.h"
+#include "Tstack.h"
 
     class TQueue : public TStack
     {
