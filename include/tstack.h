@@ -3,14 +3,15 @@
 class TStack :public TDataRoot
 {
 private:
-	int top; 
+	int hi; 
 public:
     TStack(int Size = DefMemSize);
     ~TStack() {};
 	void Put(const TData &Val); 
-	TData Get();
+	virtual TData Get();
 	virtual TData TopElem(); 
+	virtual int GetNextIndex(int index);
 
 	int IsValid();
-    void Print();
+    virtual void Print();
 };

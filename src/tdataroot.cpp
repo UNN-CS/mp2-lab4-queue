@@ -13,10 +13,11 @@ TDataRoot::TDataRoot(int Size): TDataCom()
 {
   DataCount = 0;
   MemSize = Size;
-  if (Size == 0) // память будет установлена методом SetMem
+  if (Size <= 0) // память будет установлена методом SetMem
   {
     pMem = NULL;
     MemType = MEM_RENTER;
+	SetRetCode(DataNoMem);
   }
   else // память выделяется объектом
   {
