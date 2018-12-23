@@ -2,12 +2,12 @@
 
 TJobStream::TJobStream(int lenght) : TQueue(lenght)
 {
-	distribution = std::uniform_real_distribution<double>(0.0, 1.0);
+	distribution = uniform_real_distribution<double>(0.0, 1.0);
 	q1 = 0;
 	failAddNum = 0;
 }
 
-bool TJobStream::TryToAdd(int n)//οεπεδελΰςό
+bool TJobStream::TryToAdd(int n)//Γ―Γ₯Γ°Γ₯Γ€Γ₯Γ«Γ Γ²ΓΌ
 {
 	//srand(time(NULL));
 	if (distribution(generator) < q1)
