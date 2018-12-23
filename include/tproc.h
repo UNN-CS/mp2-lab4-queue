@@ -1,17 +1,18 @@
 #include "tjobstream.h"
 #include <stdlib.h>
-#include <time.h>
+#include <random>
 #include <iostream>
 
+using namespace std;
 
 class  TProc : protected TJobStream
 {
 protected:
 	float q2;
-	unsigned long int tactNum; // количество тактов
-	unsigned long int completedTactNum; // количество выл=полненых команд
-	float averTuctNumToComplete; // среднее число тактов для выполнения
-	unsigned long int idleNum; // количество тактов простоя
+	unsigned long int tactNum; // ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГІГ ГЄГІГ®Гў
+	unsigned long int completedTactNum; // ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГўГ»Г«=ГЇГ®Г«Г­ГҐГ­Г»Гµ ГЄГ®Г¬Г Г­Г¤
+	float averTuctNumToComplete; // Г±Г°ГҐГ¤Г­ГҐГҐ Г·ГЁГ±Г«Г® ГІГ ГЄГІГ®Гў Г¤Г«Гї ГўГ»ГЇГ®Г«Г­ГҐГ­ГЁГї
+	unsigned long int idleNum; // ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГІГ ГЄГІГ®Гў ГЇГ°Г®Г±ГІГ®Гї
 public:
 	TProc(int lenght);
 	bool TryToComplete();
