@@ -13,9 +13,9 @@ class TProc
 {
 
 protected:
-    double m_q2; //вероятность завершения выполнения задания (0 <= q2 <= 1)
+    double m_q2;
     TJobStream m_JobStream;
-    int m_CountDowntime;  //количество тактов простоя
+    int m_CountDowntime;
     int m_MaxTact;
     ProcStatus m_Status;
 public:

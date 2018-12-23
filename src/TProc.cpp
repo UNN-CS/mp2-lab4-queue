@@ -36,8 +36,8 @@ void TProc::ProcWork()
 void TProc::PrintInfo()
 {
     cout << endl;
-    cout << "Кол-во поступивших в вычислительную систему заданий: " << m_JobStream.m_ID << endl;
-    cout << "Кол-во отказов в обслуживании заданий из-за переполнения очереди: " << m_JobStream.m_CountFail << " (" << (double)m_JobStream.m_CountFail / m_JobStream.m_ID * 100 << "%)" << endl;
-    cout << "Среднее количество тактов выполнения задания: " << (double)(m_MaxTact - m_CountDowntime) / (m_JobStream.m_ID - m_JobStream.m_CountFail) << endl;
-    cout << "Кол-во тактов простоя процессора: " << m_CountDowntime << " (" << double(m_CountDowntime) / m_MaxTact * 100 << "%)" << endl;
+    cout << "Number of tasks received by the computing system: " << m_JobStream.m_ID << endl;
+    cout << "The number of failures in service jobs due to overflow queue:: " << m_JobStream.m_CountFail << " (" << (double)m_JobStream.m_CountFail / m_JobStream.m_ID * 100 << "%)" << endl;
+    cout <<  "The average number of job cycles" << (double)(m_MaxTact - m_CountDowntime) / (m_JobStream.m_ID - m_JobStream.m_CountFail) << endl;
+    cout << "CPU idle cycles: " << m_CountDowntime << " (" << double(m_CountDowntime) / m_MaxTact * 100 << "%)" << endl;
 }
