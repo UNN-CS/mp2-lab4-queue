@@ -1,36 +1,33 @@
 
+#ifndef __PROC_H__
+#define __PROC_H__
 
-#ifndef LAB_4_TPROC_H
-#define LAB_4_TPROC_H
-#include <random>
-#include <ctime>
+#include "TJobStream.h"
 
-using namespace std;
-
+#define DefMaxTacts 1000
 enum ProcStatus { BUSY, FREE };
 
 class TProc
 {
 
 protected:
-    double m_q2;
-    TJobStream m_JobStream;
-    int m_CountDowntime;
-    int m_MaxTact;
-    ProcStatus m_Status;
+	double m_q2;
+	TJobStream m_JobStream;
+	int m_CountDowntime;  
+	int m_MaxTact;
+	ProcStatus m_Status;
 public:
-    TProc(double q1, double q2, int size, int maxTact = DefMaxTacts) : m_JobStream(q1, size)
-    {
-            if (q1 < 0 || q1 > 1 || q2 < 0 || q2 > 1 || size < 0 || maxTact < 0)
-                    throw "DataError";
-            m_MaxTact = maxTact;
-            m_q2 = q2;
-            m_CountDowntime = 0;
-            m_Status = FREE;
-    }
-    void ProcWork();
-    void PrintInfo();
+	TProc(double q1, double q2, int size, int maxTact = DefMaxTacts) : m_JobStream(q1, size)
+	{
+		if (q1 < 0 || q1 > 1 || q2 < 0 || q2 > 1 || size < 0 || maxTact < 0)
+			throw "DataError";
+		m_MaxTact = maxTact;
+		m_q2 = q2;
+		m_CountDowntime = 0;
+		m_Status = FREE;
+	}
+	void ProcWork();
+	void PrintInfo();
 };
 
-
-#endif //LAB_4_TPROC_H
+#endif 

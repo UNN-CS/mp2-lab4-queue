@@ -1,76 +1,78 @@
-//
-// Created by rootreddragon on 12/23/2018.
-//
-
-#include <iostream>
 #include "tstack.h"
+#include <iostream>
 
 using namespace std;
 
-TStack::TStack(int Size) : TDataRoot(Size)
+int TStack::GetNextIndex(int index)
 {
-    top = -1;
+	return ++index;
+}
+
+TStack::TStack(const TStack &st)
+{
+	DataCount = st.DataCount;
+	MemSize = st.MemSize;
+	MemType = st.MemType;
+	pMem = new TElem[MemSize];
+	for (int i = 0; i < DataCount; i++)
+		pMem[i] = st.pMem[i];
 }
 
 void TStack::Put(const TData &Val)
 {
-    if (pMem == nullptr)
-    {
-        SetRetCode(DataNoMem);
-    }
-    else if (IsFull())
-    {
-        SetRetCode(DataFull);
-    }
-    else
-    {
-        DataCount++;
-        pMem[++top] = Val;
-    }
+	if (pMem == nullptr)
+		throw SetRetCode(DataNoMem);
+	else
+	{
+		if (IsFull())
+		{
+			void* p = new TElem[MemSize + DefMemSize];
+			SetMem(p, MemSize + DefMemSize);
+		}
+		Hi = GetNextIndex(Hi);
+		pMem[Hi] = Val;
+		DataCount++;
+	}
 }
 
 TData TStack::Get()
 {
-    if (pMem == nullptr)
-    {
-        SetRetCode(DataNoMem);
-    }
-    else if (IsEmpty())
-    {
-        SetRetCode(DataEmpty);
-    }
-    else
-    {
-        DataCount--;
-        return pMem[top--];
-    }
+	if (pMem == nullptr)
+		throw SetRetCode(DataNoMem);
+	else if (IsEmpty())
+		throw SetRetCode(DataEmpty);
+	else
+	{
+		DataCount--;
+		return pMem[Hi--];
+	}
 }
 
-TData TStack::TopElem()
+int  TStack::IsValid()
 {
-    if (pMem == nullptr)
-    {
-        SetRetCode(DataNoMem);
-    }
-    else if (IsEmpty())
-    {
-        SetRetCode(DataEmpty);
-    }
-    else
-    {
-        return pMem[top];
-    }
-}
-
-int TStack::IsValid()
-{
-    return 1;
+	int res = 0;
+	if (pMem == nullptr)
+		res++;
+	if (MemSize < DataCount)
+		res += 2;
+	return res;
 }
 
 void TStack::Print()
 {
-    for (int i = 0; i < DataCount; i++)
-    {
-        std::cout << pMem[i] << ' ';
-    }
+	if (DataCount == 0)
+		cout << "Stack is empty!";
+	for (int i = 0; i < DataCount; ++i)
+		cout << pMem[i] << " ";
+	cout << endl;
+}
+
+TData TStack::GetTopElem()
+{
+	if (pMem == nullptr)
+		throw SetRetCode(DataNoMem);
+	else if (IsEmpty())
+		throw SetRetCode(DataEmpty);
+	else
+		return pMem[Hi];
 }

@@ -2,15 +2,16 @@
 
 class TStack :public TDataRoot
 {
-private:
-	int top; 
+protected:
+	int Hi; 
+	virtual int GetNextIndex(int Index);
 public:
-    TStack(int Size = DefMemSize);
-    ~TStack() {};
-	void Put(const TData &Val); 
-	TData Get();
-	virtual TData TopElem(); 
-
-	int IsValid();
-    void Print();
+	TStack(int Size = DefMemSize) : TDataRoot(Size), Hi(-1) {}
+	TStack(const TStack &);
+	void Put(const TData &); // �������� � ����
+	TData Get(); //����� �� �����
+	int  IsValid();
+	void Print();
+	TData GetTopElem();
+};
 };

@@ -1,28 +1,23 @@
-//
-// Created by rootreddragon on 12/23/2018.
-//
+#ifndef __JOBSTREAM_H__
+#define __JOBSTREAM_H__
 
-#ifndef LAB_4_TJOBSTREAM_H
-#define LAB_4_TJOBSTREAM_H
+#include "tqueue.h"
 
-#include <random>
-#include <ctime>
-
-using namespace std;
-
-class TJobStream
+class TJobStream : public TQueue
 {
-private:
-    mt19937 generate_value;             // генерация значения датчика
-    double upper_bound;                      // некое пороговое значение
-    int task_number;                         // индекс задания
+
+protected:
+	double m_q1; //вероятность появления нового задания (0 <= q1 <= 1)
 public:
-    TJobStream(double q1);                   // конструктор с неким пороговым значением
-    int Tact();                              // такт
+	int m_ID;
+	int m_CountFail;  //количество отказов в обслуживании заданий
+
+	TJobStream(double q1, int size = DefMemSize) : m_q1(q1), TQueue(size)
+	{
+		m_ID = 0;
+		m_CountFail = 0;
+	}
+	void TactStream();
 };
 
-
-
-
-
-#endif //LAB_4_TJOBSTREAM_H
+#endif 
