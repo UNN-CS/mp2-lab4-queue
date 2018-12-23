@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "Tstack.h"
+#include "tstack.h"
 
 using namespace std;
 
