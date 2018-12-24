@@ -3,46 +3,63 @@
 
 using namespace std;
 
-int TQueue::GetNextIndex(int index)
+TQueue::TQueue(int Size):TStack(Size)
 {
-	return ++index % MemSize;
-}
-
-void TQueue::Put(const TData &Val)
-{
-	if (pMem == nullptr)
-		throw SetRetCode(DataNoMem);
-	else if (IsFull())
-		throw SetRetCode(DataFull);
-	else
-	{
-		Hi = GetNextIndex(Hi);
-		pMem[Hi] = Val;
-		DataCount++;
-	}
+    Li = -1;
 }
 
 TData TQueue::Get()
 {
-	if (pMem == nullptr)
-		throw SetRetCode(DataNoMem);
-	else if (IsEmpty())
-		throw SetRetCode(DataEmpty);
-	else
-	{
-		DataCount--;
-		TData tmp = pMem[Li];
-		GetNextIndex(Li);
-		return tmp;
-	}
+    TData tmp = -1;
+    if(pMem == NULL)
+        SetRetCode(DataNoMem);
+    else if(IsEmpty())
+        SetRetCode(DataEmpty);
+    else
+    {
+        Li = GetNextIndex(Li);
+        tmp = pMem[Li];
+        --DataCount;
+    }
+    return tmp;
 }
 
-TData TQueue::GetTopElem()
+TData TQueue::TopElem()
 {
-	if (pMem == nullptr)
-		throw SetRetCode(DataNoMem);
-	else if (IsEmpty())
-		throw SetRetCode(DataEmpty);
-	else
-		return pMem[Li];
+    if(pMem == NULL)
+    {
+        SetRetCode(DataNoMem);
+        return -1;
+    }
+    else if(IsEmpty())
+    {
+        SetRetCode(DataEmpty);
+        return -1;
+    }
+    else
+    {
+        int tmpInd = GetNextIndex(Li);
+        return pMem[tmpInd];
+    }
 }
+
+void TQueue::Print()
+{
+    int tmp = Li;
+    for(int i = 0; i < DataCount; i++)
+    {
+        cout<<pMem[tmp];
+        tmp = GetNextIndex(tmp);
+    }
+}
+
+int TQueue::GetNextIndex(int ind)
+{
+    return ++ind%MemSize;
+}
+
+int TQueue::GetSize() const
+{
+    return DataCount;
+}
+

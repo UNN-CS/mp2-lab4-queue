@@ -1,23 +1,19 @@
 #ifndef __JOBSTREAM_H__
 #define __JOBSTREAM_H__
 
-#include "tqueue.h"
+#include <random>
+#include <ctime>
 
-class TJobStream : public TQueue
+class TJobStream
 {
-
-protected:
-	double m_q1; //вероятность появления нового задания (0 <= q1 <= 1)
+    double q1;
+    int cnt = 0;
+    std::mt19937 mt;
+    std::uniform_real_distribution<double> rand;
 public:
-	int m_ID;
-	int m_CountFail;  //количество отказов в обслуживании заданий
-
-	TJobStream(double q1, int size = DefMemSize) : m_q1(q1), TQueue(size)
-	{
-		m_ID = 0;
-		m_CountFail = 0;
-	}
-	void TactStream();
+    TJobStream();
+    bool IsTask();
+    int GetTask();
 };
 
-#endif 
+#endif // __JOBSTREAM_H__
