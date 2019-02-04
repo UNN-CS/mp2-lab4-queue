@@ -17,5 +17,4 @@ public:
     void Ready();
     void Busy();
 };
-
 #endif // __PROC_H__
