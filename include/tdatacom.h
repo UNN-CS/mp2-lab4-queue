@@ -1,9 +1,9 @@
-// РќРќР“РЈ, Р’РњРљ, РљСѓСЂСЃ "РњРµС‚РѕРґС‹ РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ-2", РЎ++, РћРћРџ
+// ННГУ, ВМК, Курс "Методы программирования-2", С++, ООП
 //
-// tdatacom.h - Copyright (c) Р“РµСЂРіРµР»СЊ Р’.Рџ. 30.08.2000
-//   РџРµСЂРµСЂР°Р±РѕС‚Р°РЅРѕ РґР»СЏ Microsoft Visual Studio 2008 РЎС‹СЃРѕРµРІС‹Рј Рђ.Р’. (21.04.2015)
+// tdatacom.h - Copyright (c) Гергель В.П. 30.08.2000
+//   Переработано для Microsoft Visual Studio 2008 Сысоевым А.В. (21.04.2015)
 //
-// РћР±СЂР°Р±РѕС‚РєР° РєРѕРґРѕРІ Р·Р°РІРµСЂС€РµРЅРёСЏ
+// Обработка кодов завершения
 
 #ifndef __DATACOM_H__
 #define __DATACOM_H__
@@ -11,22 +11,23 @@
 #define DataOK   0
 #define DataErr -1
 
-// TDataCom СЏРІР»СЏРµС‚СЃСЏ РѕР±С‰РёРј Р±Р°Р·РѕРІС‹Рј РєР»Р°СЃСЃРѕРј
+// TDataCom является общим базовым классом
 class TDataCom
 {
 protected:
-  int RetCode; // РљРѕРґ Р·Р°РІРµСЂС€РµРЅРёСЏ
+	int RetCode; // Код завершения
 
-  int SetRetCode(int ret) { return RetCode = ret; }
+	int SetRetCode(int ret) { return RetCode = ret; }
 public:
-  TDataCom(): RetCode(DataOK) {}
-  virtual ~TDataCom() {}
-  int GetRetCode()
-  {
-    int temp = RetCode;
-    RetCode = DataOK;
-    return temp;
-  }
+	TDataCom() : RetCode(DataOK) {}
+	virtual ~TDataCom() {}
+	int GetRetCode()
+	{
+		int temp = RetCode;
+		RetCode = DataOK;
+		return temp;
+	}
 };
 
 #endif
+
